@@ -1,0 +1,28 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define IOS ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define endl "\n"
+#define int long long
+int t,n;
+string s;
+char c;
+int32_t main()
+{
+    IOS;
+    cin>>t;
+    while(t--)
+    {
+    	cin>>n>>s>>c;
+    	int ans=n*(n-1)/2+n,cnt=0;
+    	for(int i=0;i<n;i++)
+    	{
+    		if(s[i]==c)
+    			ans-=cnt*(cnt-1)/2+cnt,cnt=0;
+    		else
+    			cnt++;
+    	}
+    	ans-=cnt*(cnt-1)/2+cnt;
+    	cout<<ans<<endl;
+    }
+    return 0;
+}

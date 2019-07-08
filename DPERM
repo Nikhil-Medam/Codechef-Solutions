@@ -1,0 +1,176 @@
+#include<bits/stdc++.h>
+#pragma GCC optimize ("-O3")
+using namespace std;
+#define IOS ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define endl "\n"
+#define ll long long
+#define int long long
+#define double long double
+#define pb push_back
+#define max(a,b) (a>b?a:b)
+#define min(a,b) (a<b?a:b)
+#define diff(a,b) (a>b?a-b:b-a)
+const int N=2e5+5;
+void pairsort(int a[], int b[], int n){
+    pair<int, int> pairt[n];
+    for (int i = 0; i < n; i++) 
+    {
+        pairt[i].first = a[i];
+        pairt[i].second = b[i];
+    }
+    sort(pairt, pairt + n);
+    for (int i = 0; i < n; i++) 
+    {
+        a[i] = pairt[i].first;
+        b[i] = pairt[i].second;
+    }
+}
+int gcd(int a, int b){
+    if (b == 0)
+        return a;
+    return gcd(b, a % b); 
+}
+int isPrime(int n){
+    if(n < 2)
+        return 0;
+    if(n < 4)
+        return 1;
+    if(n % 2 == 0 or n % 3 == 0)
+        return 0;
+    for(int i = 5; i*i <= n; i += 6)
+        if(n % i == 0 or n % (i+2) == 0)
+            return 0;
+    return 1;
+}
+long long C(int n, int r) {
+    if(r>n-r) 
+        r=n-r;
+    long long ans=1;
+    for(int i=1;i<=r;i++){
+        ans*=n-r+i;
+        ans/=i;
+    }
+    return ans;
+}
+int mod = 1e9+7;
+int modexpo(int x,int p){
+    int res = 1;
+    x = x%mod;
+    while(p){
+        if(p%2)
+            res = res * x;
+        p >>= 1;
+        x = x*x % mod;
+        res %= mod;
+    }
+    return res;
+}
+int getSum(int *BITree, int index) 
+{ 
+    int sum = 0; // Initialize result 
+  
+    // Traverse ancestors of BITree[index] 
+    while (index > 0) 
+    { 
+        // Add current element of BITree to sum 
+        sum += BITree[index]; 
+  
+        // Move index to parent node in getSum View 
+        index -= index & (-index); 
+    } 
+    return sum; 
+} 
+  
+// Updates a node in Binary Index Tree (BITree) at given index 
+// in BITree.  The given value 'val' is added to BITree[i] and 
+// all of its ancestors in tree. 
+void updateBIT(int *BITree, int n, int index, int val) 
+{ 
+    // Traverse all ancestors and add 'val' 
+    while (index <= n) 
+    { 
+       // Add 'val' to current node of BI Tree 
+       BITree[index] += val; 
+  
+       // Update index to that of parent in update View 
+       index += index & (-index); 
+    } 
+} 
+  
+// Returns inversion count arr[0..n-1] 
+int getInvCount(int *arr, int n) 
+{ 
+    int invcount = 0; // Initialize result 
+  
+    // Find maximum element in arr[] 
+    int maxElement = 0; 
+    for (int i=0; i<n; i++) 
+        if (maxElement < arr[i]) 
+            maxElement = arr[i]; 
+  
+    // Create a BIT with size equal to maxElement+1 (Extra 
+    // one is used so that elements can be directly be 
+    // used as index) 
+    int BIT[maxElement+1]; 
+    for (int i=1; i<=maxElement; i++) 
+        BIT[i] = 0; 
+  
+    // Traverse all elements from right. 
+    for (int i=n-1; i>=0; i--) 
+    { 
+        // Get count of elements smaller than arr[i] 
+        invcount += getSum(BIT, arr[i]-1); 
+  
+        // Add current element to BIT 
+        updateBIT(BIT, maxElement, arr[i], 1); 
+    } 
+  
+    return invcount; 
+} 
+int t,n,d,a[N],b[N];
+int32_t main()
+{
+    IOS;
+    cin>>t;
+    while(t--)
+    {
+        cin>>n>>d;
+        for(int i=1;i<=n;i++)
+            cin>>a[i],b[a[i]]=i;
+        if(d==1)
+        {
+            int s=0,mi=a[1];
+            s=getInvCount(a+1,n);
+            cout<<s<<endl;
+            continue;
+        }
+        int ans=0,f=0;
+        for(int i=1;i<=n;i++)
+        {
+            if(diff(a[i],i)%d==0)
+            {
+                int p=a[i];
+                while(p>i)
+                {
+                    int ind1=b[p],ind2=b[p-d];
+                    swap(a[ind1],a[ind2]);
+                    b[a[ind1]]=ind1,b[a[ind2]]=ind2;
+                    p-=d;
+                    ans++;
+                }
+            }
+            else
+            {
+                f=1;
+                break;
+            }
+        }
+        if(f)
+        {
+            cout<<-1<<endl;
+            continue;
+        }
+        cout<<ans<<endl;
+    }
+    return 0;
+}

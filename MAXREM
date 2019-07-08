@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define IOS ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define endl "\n"
+#define max(a,b) (a>b?a:b)
+int n,a[100005],ans;
+vector<int> v;
+map<int,int> M;
+int32_t main()
+{
+    IOS;
+    cin>>n;
+    for(int i=0;i<n;i++)
+    {
+    	cin>>a[i];
+    	M[a[i]]++;
+    	if(M[a[i]]==1)
+    		v.push_back(a[i]);
+    }
+    sort(v.begin(),v.end());
+    if(v.size()>1)
+    	ans=v[v.size()-2];
+    for(int i=0;i+1<v.size();i++)
+    	ans=max(ans,v[v.size()-1]%v[i]);
+    cout<<ans;
+    return 0;
+}
